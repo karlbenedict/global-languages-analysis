@@ -1,0 +1,3 @@
+[submodule "grass_submodule"]
+	path = grass_submodule
+	url = https://github.com/OSGeo/grass.git
