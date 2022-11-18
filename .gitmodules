@@ -1,3 +1,6 @@
 [submodule "grass_submodule"]
 	path = grass_submodule
 	url = https://github.com/karlbenedict/grass.git
+[submodule "rocker_submodule"]
+	path = rocker_submodule
+	url = https://github.com/karlbenedict/rocker-versioned2.git
