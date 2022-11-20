@@ -10,11 +10,12 @@
 # removed rocker-grass container. 
 
 echo "starting rocker-grass container"
+mkdir $(pwd)/source_data
 docker start rocker-grass 2>/dev/null|| \
 docker run -d \
 	-p 8787:8787 \
 	-e PASSWORD=fi1Aim2uing7guth \
 	-v $(pwd)/source_data:/home/rstudio/data/source_data \
-		--name=rocker-grass \
-	kbene/rocker-grass:v0.1
+	--name=rocker-grass \
+	rocker-grass
 
