@@ -1,4 +1,7 @@
 grassdata/
 source_data/
 output/
+temp/
 .DS_STORE
+xx*
+.grassrc*
