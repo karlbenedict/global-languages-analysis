@@ -78,6 +78,56 @@ stringexecGRASS("g.region -p")
 
 ###############################################################################
 
+##### World Sinusoidal ########################################################
+location <- "4326" # use the existing 4325 location to prevent premature creation of incomplete mollweide location
+mapset <- "PERMANENT"
+
+initGRASS(
+  gisBase = gisBase,
+  home = projectRoot, #tempdir(),  #tempDatedFolder(projectRoot),
+  gisDbase = gisDBase,
+  location = location,
+  mapset = mapset,
+  override = TRUE
+)
+
+try(execGRASS("g.proj", 
+              flags=c("c"), 
+              parameters=list(location="world_sinusoidal",
+                              wkt="scripts/world_sinusoidal.prj"),
+              echoCmd=TRUE))
+
+location <- "world_sinusoidal"
+mapset <- "PERMANENT"
+
+initGRASS(
+  gisBase = gisBase,
+  home = projectRoot, #tempdir(),  #tempDatedFolder(projectRoot),
+  gisDbase = gisDBase,
+  location = location,
+  mapset = mapset,
+  override = TRUE
+)
+
+execGRASS("v.proj",
+          flags=c("overwrite"),
+          parameters=list(input="bounds4326", 
+                          location="4326"))
+execGRASS("g.region",
+          flags=c("a","s","overwrite"),
+          parameters=list(vector="bounds4326",
+                          res="10000",
+                          save = "ws_global_10km"))
+execGRASS("g.region",
+          flags=c("p"))
+
+print("changing into region")
+stringexecGRASS("g.region region=ws_global_10km")
+print("region settings")
+stringexecGRASS("g.region -p")
+
+###############################################################################
+
 ##### Mollweide ###############################################################
 location <- "4326" # use the existing 4325 location to prevent premature creation of incomplete mollweide location
 mapset <- "PERMANENT"
