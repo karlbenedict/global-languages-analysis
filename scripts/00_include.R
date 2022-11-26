@@ -58,6 +58,7 @@ ps_preview <- function(raster="",
                        geogrid=TRUE, 
                        scalebar=FALSE, 
                        mapinfo=TRUE,
+                       rasterLegend=FALSE,
                        title="Default map preview"){
   # this function must be executed within a defined GRASS environment context
   workingDir <- tempDatedFolder()
@@ -142,7 +143,15 @@ ps_preview <- function(raster="",
     cat("    where 7.75 0.375" , fill=TRUE, file=commandFile, append=TRUE)
     cat("end", fill=TRUE, file=commandFile, append=TRUE)
   }
-
+  if (rasterLegend) {
+    cat("colortable y", fill=TRUE, file=commandFile, append=TRUE)
+    cat("    where .25 5.5", fill=TRUE, file=commandFile, append=TRUE)
+    cat("    width 8.5" , fill=TRUE, file=commandFile, append=TRUE)
+    cat("    height .24" , fill=TRUE, file=commandFile, append=TRUE)
+    cat("    fontsize 4" , fill=TRUE, file=commandFile, append=TRUE)
+    cat("end", fill=TRUE, file=commandFile, append=TRUE)
+  }
+  
   cat("Vector layers: ", fill=FALSE, file=headerFile, append=TRUE)
   cat(paste(vectorLayers, collapse=", "), fill=TRUE, file=headerFile, append=TRUE)
   cat("Produced by: Karl Benedict, %d", fill=TRUE, file=headerFile, append=TRUE)
