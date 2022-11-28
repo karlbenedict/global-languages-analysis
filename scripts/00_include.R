@@ -9,6 +9,7 @@ library(tidyverse)
 library(readr)
 library(forcats)
 library(readxl)
+library(tools)
 
 # legacy - delete if not needed later
 #use_sp() # https://gis.stackexchange.com/questions/341451/rgrass7-no-stars-import-yet
@@ -47,6 +48,7 @@ tempDatedFolder <- function() {
   temppath
 }
 
+# generate postscript preview image from specified raster, point, line, and area vectors
 ps_preview <- function(raster="", 
                        vPoints=c(), 
                        vPoints_colors=c(),
@@ -179,6 +181,7 @@ ps_preview <- function(raster="",
   )
 }
 
+# clear the specified set of environmental variable values
 clearVars <- function(varList) {
   for (envVar in varList) {
     Sys.unsetenv(envVar)
@@ -201,4 +204,16 @@ getSourceZip <- function(fileURL){
   print(commandString)
   system(commandString)
   return(unzippedDirectory)
+}
+
+# write supplied output into an external file
+outputMessage <- function(output_file, keyword, message, append = TRUE) {
+  outfile <- file(output_file, "at")
+  message <- paste(format_ISO8601(now()), keyword, message, sep = "|")
+  message()
+  message("===========================================================")
+  message(message)
+  message("===========================================================\n")
+  writeLines(c(paste(message,"|-|", sep = "")),  outfile)
+  close(outfile)
 }
