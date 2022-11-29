@@ -177,54 +177,6 @@ print("region settings")
 stringexecGRASS("g.region -p")
 ###############################################################################
 
-##### ACE2 ####################################################################
-location <- "4326"
-mapset <- "PERMANENT"
-
-initGRASS(
-  gisBase = gisBase,
-  home = projectRoot, #tempdir(),  #tempDatedFolder(projectRoot),
-  gisDbase = gisDBase,
-  location = location,
-  mapset = mapset,
-  override = TRUE
-)
-
-# create the location if it doesn't already exist
-try(execGRASS("g.proj", 
-          flags=c("c"), 
-          parameters=list(location="ace2",
-                          wkt="scripts/world_equidistant_cylindrical.prj"),
-          echoCmd=TRUE))
-
-
-location <- "ace2"
-mapset <- "PERMANENT"
-
-initGRASS(
-  gisBase = gisBase,
-  home = projectRoot, #tempdir(),  #tempDatedFolder(projectRoot),
-  gisDbase = gisDBase,
-  location = location,
-  mapset = mapset,
-  override = TRUE
-)
-
-execGRASS("v.proj",
-          flags=c("overwrite"),
-          parameters=list(input="bounds4326", 
-                          location="4326"))
-execGRASS("g.region",
-          flags=c("s","overwrite"),
-          parameters=list(vector="bounds4326",
-                          res="1",
-                          save = "ace2_30-arc-second"))
-print("changing into region")
-stringexecGRASS("g.region region=ace2_30-arc-second")
-print("region settings")
-stringexecGRASS("g.region -p")
-###############################################################################
-
 
 
 
