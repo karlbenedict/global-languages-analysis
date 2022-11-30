@@ -18,7 +18,6 @@ gfw_files <- read_csv(paste(unzippedDirectory,"/",fileBaseName,".csv", sep=""))
 
 downloadDirectory <- paste(gfw_file_path, "files", sep="/")
 system(paste("mkdir",downloadDirectory,sep=" "))
-system(commandString)
 
 # loop through df to import the individual GeoTiff files into a single GRASS raster
 # while calculating the average biomass in Mg/Ha for each 30-arc-second raster
@@ -61,6 +60,7 @@ for (i in 1:length(files)) {
   commandString <- paste("wget -nc --progress=dot:giga --directory-prefix=",downloadDirectory,
                          " --output-document=",outputFile,
                          " \"",files[i],"\"", sep="" )
+  system(commandString)
   #print(commandString)
   
   # resample the source pixels outside of GRASS as the 'gdal_translate" 
