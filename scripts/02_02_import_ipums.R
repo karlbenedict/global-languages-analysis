@@ -75,10 +75,23 @@ execGRASS("v.info",
           echoCmd=TRUE
 )
 
+# generate a generalized version of the dissolved boundaries to speed processing
+# and rendering.  
+generalizedVect <- paste(dissolvedVect,"_generalized",sep="")
+execGRASS("v.generalize",
+          flags=c("overwrite","verbose"),
+          parameters=list(input=dissolvedVect,
+                          output=generalizedVect,
+                          method="douglas",
+                          threshold=0.083),
+          echoCmd=TRUE
+)
+
+
 ps_preview(title="World boundaries",
            raster="bmng.rgb",
-           vAreas=c("world_countries_2017_dissolved","world_countries_2017"),
-           vAreas_colors=c("red","gray"),
-           vAreas_fcolors = c("none","none"))
+           vAreas=c("world_countries_2017_dissolved","world_countries_2017_dissolved_generalized","world_countries_2017"),
+           vAreas_colors=c("red","yellow","gray"),
+           vAreas_fcolors = c("none","none","none"))
 
 unlink_.gislock
