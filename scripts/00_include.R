@@ -61,7 +61,9 @@ ps_preview <- function(raster="",
                        scalebar=FALSE, 
                        mapinfo=TRUE,
                        rasterLegend=FALSE,
-                       title="Default map preview"){
+                       title="Default map preview",
+                       width=9,
+                       height=6){
   # this function must be executed within a defined GRASS environment context
   workingDir <- tempDatedFolder()
   commandFile <- paste(workingDir, "commands.txt", sep="/")
@@ -166,8 +168,8 @@ ps_preview <- function(raster="",
   cat("end", fill=TRUE, file=commandFile, append=TRUE)
   
   cat("paper" , fill=TRUE, file=commandFile, append=TRUE)
-  cat("    width 9" , fill=TRUE, file=commandFile, append=TRUE)
-  cat("    height 6" , fill=TRUE, file=commandFile, append=TRUE)
+  cat(paste("    width",width,sep=" ") , fill=TRUE, file=commandFile, append=TRUE)
+  cat(paste("    height",height,sep=" ") , fill=TRUE, file=commandFile, append=TRUE)
   cat("    left .25" , fill=TRUE, file=commandFile, append=TRUE)
   cat("    right .25" , fill=TRUE, file=commandFile, append=TRUE)
   cat("    top .25" , fill=TRUE, file=commandFile, append=TRUE)
@@ -194,7 +196,7 @@ clearVars <- function(varList) {
 getSourceZip <- function(fileURL){
   downloadDirectory <- paste(getwd(), "/temp", sep="")
   # download
-  commandString <- paste("wget -nc --directory-prefix=",downloadDirectory," ",fileURL, sep="" )
+  commandString <- paste("wget -nc --progress=dot:giga --directory-prefix=",downloadDirectory," ",fileURL, sep="" )
   print(commandString)
   system(commandString)
   # uncompress
@@ -216,4 +218,67 @@ outputMessage <- function(output_file, keyword, message, append = TRUE) {
   message("===========================================================\n")
   writeLines(c(paste(message,"|-|", sep = "")),  outfile)
   close(outfile)
+}
+
+# use gdalwarp to reproject a raster from one GRASS location to another
+# This is intended to work around the reprojection issues that have emerged
+# trying to use r.proj within the GRASS toolset
+warpRaster <- function(sourceLocation,
+                       sourceMapset,
+                       sourceRaster,
+                       destCRS,
+                       destLocation,
+                       destMapset,
+                       destRegion,
+                       destRaster) {
+
+  inputTempFile <- paste(projectRoot,"/temp/inFile.tif",sep="")
+  outputTempFile <- paste(projectRoot,"/temp/outFile.tif",sep="")
+  
+  # export the source raster to a temp GeoTiff file
+  location <- sourceLocation
+  mapset <- sourceMapset
+  initGRASS(
+    gisBase = gisBase,
+    home = projectRoot,
+    gisDbase = gisDBase,
+    location = location,
+    mapset = mapset,
+    override = TRUE
+  )
+  execGRASS("g.region", 
+            flags=c("verbose","p"), 
+            parameters=list(raster=sourceRaster), 
+            echoCmd=TRUE)
+  grassCommand <- paste("r.out.gdal --overwrite --verbose input=",sourceRaster," output=",inputTempFile," format=GTiff type=Float32 createopt=\"PROFILE=GeoTIFF,TFW=YES\"", sep="")
+  print(grassCommand)
+  stringexecGRASS(grassCommand)
+  
+  # use gdalwarp to reproject the source GeoTiff to the destination GeoTiff
+  commandString <- paste("gdalwarp -t_srs",destCRS,inputTempFile,outputTempFile,sep=" ")
+  print(commandString)
+  system(commandString)
+  
+  # import the reprojected GeoTiff into the target GRASS location
+  location <- destLocation
+  mapset <- destMapset
+  initGRASS(
+    gisBase = gisBase,
+    home = projectRoot,
+    gisDbase = gisDBase,
+    location = location,
+    mapset = mapset,
+    override = TRUE
+  )
+  execGRASS("g.region", 
+            flags=c("verbose","p"), 
+            parameters=list(region=destRegion), 
+            echoCmd=TRUE)
+  execGRASS("r.in.gdal",
+            flags=c("overwrite","verbose","o"),
+            parameters=list(input=outputTempFile,
+                            output=destRaster),
+            echoCmd=TRUE
+  )
+  
 }
