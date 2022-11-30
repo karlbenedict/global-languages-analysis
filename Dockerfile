@@ -10,7 +10,8 @@ RUN install2.r --error --skipmissing --skipinstalled \
 	readxl \
 	tools \
 	rgrass \
-	gdalUtilities
+	gdalUtilities \
+	R.utils
 
 RUN git clone https://github.com/karlbenedict/global-languages-analysis.git /home/rstudio/global-languages-analysis
 #RUN mkdir -p /home/rstudio/data/scripts
