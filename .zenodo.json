@@ -1,4 +1,4 @@
-
+{
   "version":"1.0_ALT2022",
   "title":"Analytic platform and code for global linguistic analysis",
   "description":"This repository contains the Dockerfile and setup scripts for recreating the analytic environment (including GRASS GIS and the web-based RStudio platform), analytic code for building the source data used in the analysis of the associations between global environmental variables and linguistic characteristics, and analytic and visualization code for producing the various research outputs of the project. ",
@@ -24,5 +24,5 @@
   "upload_type":"software",
   "access_right":"open",
   "license":"Apache-2.0",
-  "notes":"<p>Required components to build and use the analytic environment on a local development system include an available Docker environment (e.g. Docker Community Edition) and a web browser for accessing the running web-based RStudio interface.",
+  "notes":"<p>Required components to build and use the analytic environment on a local development system include an available Docker environment (e.g. Docker Community Edition) and a web browser for accessing the running web-based RStudio interface."
 }
