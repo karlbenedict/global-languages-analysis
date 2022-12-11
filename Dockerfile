@@ -11,6 +11,7 @@ RUN install2.r --error --skipmissing --skipinstalled \
 	tools \
 	rgrass \
 	gdalUtilities \
+	corrplot \
 	R.utils
 
 RUN git clone https://github.com/karlbenedict/global-languages-analysis.git /home/rstudio/global-languages-analysis
