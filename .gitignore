@@ -5,3 +5,5 @@ temp/
 .DS_STORE
 xx*
 .grassrc*
+*.png
+nohup.out
