@@ -1,3 +1,8 @@
+
+
+[![DOI](https://zenodo.org/badge/567860220.svg)](https://zenodo.org/badge/latestdoi/567860220)
+
+
 This repository contains the file structure, analytic code, and scripts for
 building the needed Docker container, retrieving required source data, and
 executing the analyses associated with the Global Linguistics project. 
