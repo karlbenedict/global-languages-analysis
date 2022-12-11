@@ -52,27 +52,48 @@ tempDatedFolder <- function() {
 ps_preview <- function(raster="", 
                        vPoints=c(), 
                        vPoints_colors=c(),
+                       vPoints_where=c(),
+                       vPoints_sizeColumn=c(),
                        vLines=c(), 
                        vLines_colors=c(),
+                       vlines_where=c(),
                        vAreas=c(), 
                        vAreas_colors=c(), 
-                       vAreas_fcolors=c(), 
+                       vAreas_fcolors=c(),
+                       vAreas_where=c(),
                        geogrid=TRUE, 
                        scalebar=FALSE, 
                        mapinfo=TRUE,
                        rasterLegend=FALSE,
                        title="Default map preview",
                        width=9,
-                       height=6){
+                       height=6,
+                       output=FALSE,
+                       cols=1,
+                       where=".25 5.1",
+                       rast_legend_width=4.25,
+                       rast_legend_height=.2,
+                       bbox="global",
+                       prefix="general"){
   # this function must be executed within a defined GRASS environment context
-  workingDir <- tempDatedFolder()
-  commandFile <- paste(workingDir, "commands.txt", sep="/")
-  headerFile <- paste(workingDir, "header.txt", sep="/")
-  outputFile <- paste(workingDir, "output.ps", sep="/")
+  layerNames <- paste(c(raster,vPoints,vLines,vAreas), collapse="__",sep="__")
+  print(layerNames)
+  fixedTime <- now()
+  sourceFolder <- tempDatedFolder()
+  if (output){
+    workingDir <- paste(projectRoot,"/output/images", sep="")
+    outputFile <- paste(workingDir,"/",prefix,"_",bbox,"_",substr(layerNames,1,25),".ps", sep="")
+  } else {
+    workingDir <- sourceFolder
+    outputFile <- paste(sourceFolder, "output.ps", sep="/")
+  }
+  commandFile <- paste(sourceFolder, "commands.txt", sep="/")
+  headerFile <- paste(sourceFolder, "header.txt", sep="/")
   print(paste("The output will be generated in the following temp folder:", workingDir, sep=" "))
   print(paste("The command file will be:", commandFile, sep=" "))
   print(paste("The header file will be:", headerFile, sep=" "))
-
+  print(paste("The output file will be saved to:",outputFile))
+  
   cat("%_", fill=TRUE, file=headerFile, append=TRUE)
   cat(title, fill=TRUE, file=headerFile, append=TRUE)
   cat("Basemap: %c", fill=TRUE, file=headerFile, append=TRUE)
@@ -92,7 +113,19 @@ ps_preview <- function(raster="",
       vectorLayers <- c(vectorLayers,vPoints[i])
       cat(paste("vpoints",vPoints[i],sep=" "), fill=TRUE, file=commandFile, append=TRUE)
       cat(paste("    color",vPoints_colors[i], sep=" "), fill=TRUE, file=commandFile, append=TRUE)
-      cat("    size .25" , fill=TRUE, file=commandFile, append=TRUE)
+      if (length(vPoints_where)>0) {
+        if (vPoints_where[i] != "") {cat("    where", vPoints_where[i], fill=TRUE, file=commandFile, append=TRUE)}
+        }
+      if (length(vPoints_sizeColumn)>0) {
+        if (vPoints_sizeColumn[i] != "") {
+          cat("    sizecolumn", vPoints_sizeColumn[i], fill=TRUE, file=commandFile, append=TRUE)
+          cat("    scale .5", fill=TRUE, file=commandFile, append=TRUE)
+        } else {
+          cat("    size .25" , fill=TRUE, file=commandFile, append=TRUE)
+        }
+      } else {
+        cat("    size .25" , fill=TRUE, file=commandFile, append=TRUE)
+      }
       cat("end", fill=TRUE, file=commandFile, append=TRUE)
     }
   } else {
@@ -107,6 +140,9 @@ ps_preview <- function(raster="",
       cat(paste("    color",vAreas_colors[i],sep=" "), fill=TRUE, file=commandFile, append=TRUE)
       cat(paste("    fcolor",vAreas_fcolors[i],sep=" "), fill=TRUE, file=commandFile, append=TRUE)
       cat(paste("    width .1",vAreas_fcolors[i],sep=" "), fill=TRUE, file=commandFile, append=TRUE)
+      if (length(vAreas_where)>0) {
+        if (vAreas_where[i] != "") {cat("    where", vAreas_where[i], fill=TRUE, file=commandFile, append=TRUE)}
+      }
       cat("end", fill=TRUE, file=commandFile, append=TRUE)
     } 
   } else {
@@ -120,6 +156,9 @@ ps_preview <- function(raster="",
       cat(paste("vlines",vLines[i],sep=" "), fill=TRUE, file=commandFile, append=TRUE)
       cat(paste("    color",vLines_colors[i], sep=" "), fill=TRUE, file=commandFile, append=TRUE)
       cat("    width .1" , fill=TRUE, file=commandFile, append=TRUE)
+      if (length(vLines_where)>0) {
+        if (vLines_where[i] != "") {cat("    where", vLines_where[i], fill=TRUE, file=commandFile, append=TRUE)}
+      }
       cat("end", fill=TRUE, file=commandFile, append=TRUE)
     }
   } else {
@@ -149,10 +188,12 @@ ps_preview <- function(raster="",
   }
   if (rasterLegend) {
     cat("colortable y", fill=TRUE, file=commandFile, append=TRUE)
-    cat("    where .25 5.5", fill=TRUE, file=commandFile, append=TRUE)
-    cat("    width 8.5" , fill=TRUE, file=commandFile, append=TRUE)
-    cat("    height .24" , fill=TRUE, file=commandFile, append=TRUE)
-    cat("    fontsize 4" , fill=TRUE, file=commandFile, append=TRUE)
+    cat("    where ",where, fill=TRUE, file=commandFile, append=TRUE)
+    cat("    width ",rast_legend_width , fill=TRUE, file=commandFile, append=TRUE)
+    cat("    height ",rast_legend_height, fill=TRUE, file=commandFile, append=TRUE)
+    cat("    fontsize 5" , fill=TRUE, file=commandFile, append=TRUE)
+    cat("    cols ",cols , fill=TRUE, file=commandFile, append=TRUE)
+    cat("    nodata n", fill=TRUE, file=commandFile, append=TRUE)
     cat("end", fill=TRUE, file=commandFile, append=TRUE)
   }
   
@@ -166,7 +207,9 @@ ps_preview <- function(raster="",
   cat("    fontsize 5" , fill=TRUE, file=commandFile, append=TRUE)
   cat("    color black" , fill=TRUE, file=commandFile, append=TRUE)
   cat("end", fill=TRUE, file=commandFile, append=TRUE)
-  
+
+  cat("maskcolor black" , fill=TRUE, file=commandFile, append=TRUE)
+    
   cat("paper" , fill=TRUE, file=commandFile, append=TRUE)
   cat(paste("    width",width,sep=" ") , fill=TRUE, file=commandFile, append=TRUE)
   cat(paste("    height",height,sep=" ") , fill=TRUE, file=commandFile, append=TRUE)
@@ -176,7 +219,7 @@ ps_preview <- function(raster="",
   cat("    bottom .25" , fill=TRUE, file=commandFile, append=TRUE)
   cat("end", fill=TRUE, file=commandFile, append=TRUE)
   execGRASS("ps.map",
-            flags=c("verbose"),
+            flags=c("verbose","overwrite"),
             parameters=list(input=commandFile,
                             output=outputFile),
             echoCmd=TRUE
@@ -226,6 +269,7 @@ outputMessage <- function(output_file, keyword, message, append = TRUE) {
 warpRaster <- function(sourceLocation,
                        sourceMapset,
                        sourceRaster,
+                       sourceRes,
                        destCRS,
                        destLocation,
                        destMapset,
@@ -249,6 +293,10 @@ warpRaster <- function(sourceLocation,
   execGRASS("g.region", 
             flags=c("verbose","p"), 
             parameters=list(raster=sourceRaster), 
+            echoCmd=TRUE)
+  execGRASS("g.region", 
+            flags=c("verbose","p"), 
+            parameters=list(res=sourceRes), 
             echoCmd=TRUE)
   grassCommand <- paste("r.out.gdal --overwrite --verbose input=",sourceRaster," output=",inputTempFile," format=GTiff type=Float32 createopt=\"PROFILE=GeoTIFF,TFW=YES\"", sep="")
   print(grassCommand)
