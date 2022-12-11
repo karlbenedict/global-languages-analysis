@@ -1,13 +1,9 @@
-1:8:1
-10:10:1
-17:17:1
-9:9:2
-11:12:2
-13:15:3
-18:19:3
-16:16:20
-20:20:10
-21:21:11
-22:22:21
-23:23:22
+1 thru 8 10 17 = 1 Tall Vegetation
+9 11 12 = 2 Intermediate Height Vegetation
+13 thru 15 18 19 = 3 Low Vegetation
+16 = 20 Cultivated Areas
+20 = 10 Water
+21 = 11 Snow
+22 = 21 Artificial Surface
+23 = 22 No Data
 
