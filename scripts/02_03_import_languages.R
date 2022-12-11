@@ -3,7 +3,8 @@
 # execute the shared setup file
 source("scripts/00_include.R")
 
-fileURL <- "https://github.com/karlbenedict/global-languages-data/archive/refs/heads/master.zip"
+fileURL <- "https://github.com/karlbenedict/global-languages-data/archive/refs/heads/master.zip" # master branch
+
 
 # retrieve and unzip the source file into the temp directory
 unzippedDirectory <- getSourceZip(fileURL)
@@ -104,6 +105,12 @@ initGRASS(
   mapset = mapset,
   override = TRUE
 )
+execGRASS("g.region",
+          flags=c("verbose","p"),
+          parameters=list(res="00:02:30"),
+          echoCmd=TRUE
+)
+
 
 execGRASS("v.proj",
           flags=c("overwrite", "verbose"),
@@ -149,6 +156,11 @@ initGRASS(
   location = location,
   mapset = mapset,
   override = TRUE
+)
+execGRASS("g.region",
+          flags=c("verbose","p"),
+          parameters=list(res="00:02:30"),
+          echoCmd=TRUE
 )
 
 voronoiVect <- paste(outVect,"_voronoi", sep="")

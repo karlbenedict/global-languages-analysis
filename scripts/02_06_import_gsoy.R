@@ -16,13 +16,12 @@ endYear <- 1980
 unzippedDirectory <- getSourceZip(fileURL)
 
 gsoy_file_path <- unzippedDirectory
-outfile_path <- paste(projectRoot,"/temp/gsoy.csv", sep = "")
-
-csvt_path <- paste(unzippedDirectory,"/gsoy.csvt", sep = "")
+outfile_path <- paste(projectRoot,"/output/data/gsoy.csv", sep = "")
+# the csvt file provides the reference information used to define column type
+# when the csv file is imported into GRASS
+csvt_path <- paste(projectRoot,"/output/data/gsoy.csvt", sep = "")
 columns <- '"String","String","String","Point(Y)","Point(X)","Real","Integer","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","Real","String","String"'
-fileConn <- file(csvt_path)
-print(columns, fileConn)
-close(fileConn)
+cat(columns,file=csvt_path, append=FALSE)
 
 # build combined content template dataframe (tibble)
 gsoy_data_df <- tibble(
@@ -374,7 +373,38 @@ ps_preview(title=paste("Imported weather station locations for years",startYear,
            vPoints=c("languages",outVect),
            vPoints_colors=c("red","cyan"))
 
-
+execGRASS("v.extract",
+          flags=c("verbose","overwrite"),
+          parameters=list(input="gsoy",
+                          type="point",
+                          where="TAVG IS NOT NULL",
+                          output="gsoy_tavg"),
+          echoCmd=TRUE
+)
+execGRASS("v.extract",
+          flags=c("verbose","overwrite"),
+          parameters=list(input="gsoy",
+                          type="point",
+                          where="TMIN IS NOT NULL",
+                          output="gsoy_tmin"),
+          echoCmd=TRUE
+)
+execGRASS("v.extract",
+          flags=c("verbose","overwrite"),
+          parameters=list(input="gsoy",
+                          type="point",
+                          where="TMAX IS NOT NULL",
+                          output="gsoy_tmax"),
+          echoCmd=TRUE
+)
+execGRASS("v.extract",
+          flags=c("verbose","overwrite"),
+          parameters=list(input="gsoy",
+                          type="point",
+                          where="PRCP IS NOT NULL",
+                          output="gsoy_prcp"),
+          echoCmd=TRUE
+)
 
 
 

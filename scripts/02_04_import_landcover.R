@@ -41,7 +41,7 @@ execGRASS("r.info",
 
 # generate a reclassified landcover raster with categories used in the analysis
 reclassRast <- paste(outRast, "_reclass", sep="")
-execGRASS("r.recode",
+execGRASS("r.reclass",
           flags=c("overwrite","verbose"),
           parameters=list(input = outRast,
                           output = reclassRast,
@@ -57,6 +57,21 @@ execGRASS("g.region",
           flags=c("verbose"), 
           parameters=list(region = "global_5-arc-minute"), 
           echoCmd=TRUE)
+
+glcRulesFile <- paste(projectRoot,"/temp/glc_rules.txt",sep="")
+cat("1 21:99:20",fill=TRUE,file=glcRulesFile,append=FALSE)
+cat("2 98:214:96",fill=TRUE,file=glcRulesFile,append=TRUE)
+cat("3 197:214:96",fill=TRUE,file=glcRulesFile,append=TRUE)
+cat("10 32:46:153",fill=TRUE,file=glcRulesFile,append=TRUE)
+cat("11 242:243:250",fill=TRUE,file=glcRulesFile,append=TRUE)
+
+execGRASS("r.colors",
+          flags=c("verbose"),
+          parameters=list(map="glc2000_v1_1_reclass",
+                          rules=glcRulesFile),
+          echoCmd=TRUE
+)
+
 
 ps_preview(title="Reclassified global land cover data",
            raster=reclassRast,
