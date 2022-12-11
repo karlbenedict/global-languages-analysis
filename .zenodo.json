@@ -1,28 +1,27 @@
 {
-  "version":"1.0_ALT2022",
-  "title":"Analytic platform and code for global linguistic analysis",
-  "description":"This repository contains the Dockerfile and setup scripts for recreating the analytic environment (including GRASS GIS and the web-based RStudio platform), analytic code for building the source data used in the analysis of the associations between global environmental variables and linguistic characteristics, and analytic and visualization code for producing the various research outputs of the project. ",
-  "keywords":[
-    "Linguistics",
-    "Global environmental data",
-    "Docker",
-    "Analysis",
-    "Visualization"
-  ],
-  "creators":[
-    {
-      "name":"Benedict, Karl",
-      "affiliation":"University of New Mexico",
-      "orcid":"0000-0002-9109-2072"
-    },
-    {
-      "name":"Maddieson, Ian",
-      "affiliation":"University of New Mexico",
-      "orcid":"0000-0002-0775-0555"
-    }
-  ],
-  "upload_type":"software",
-  "access_right":"open",
-  "license":"Apache-2.0",
-  "notes":"<p>Required components to build and use the analytic environment on a local development system include an available Docker environment (e.g. Docker Community Edition) and a web browser for accessing the running web-based RStudio interface."
+	"version": "1.0_ALT2022",
+	"title": "Analytic platform and code for global linguistic analysis",
+	"description": "This repository contains the Dockerfile and setup scripts for recreating the analytic environment (including GRASS GIS and the web-based RStudio platform), analytic code for building the source data used in the analysis of the associations between global environmental variables and linguistic characteristics, and analytic and visualization code for producing the various research outputs of the project. ",
+	"keywords": [
+		"Linguistics",
+		"Global environmental data",
+		"Docker",
+		"Analysis",
+		"Visualization"
+	],
+	"creators": [{
+			"name": "Benedict, Karl",
+			"affiliation": "University of New Mexico",
+			"orcid": "0000-0002-9109-2072"
+		},
+		{
+			"name": "Maddieson, Ian",
+			"affiliation": "University of New Mexico",
+			"orcid": "0000-0002-0775-0555"
+		}
+	],
+	"upload_type": "software",
+	"access_right": "open",
+	"license": "Apache-2.0",
+	"notes": "Required components to build and use the analytic environment on a local development system include an available Docker environment (e.g. Docker Community Edition) and a web browser for accessing the running web-based RStudio interface."
 }
