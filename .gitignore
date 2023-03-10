@@ -1,4 +1,7 @@
 grass_data/
 source_data/
 output/
+temp/
+*.pdf
+*.out
 .DS_STORE
