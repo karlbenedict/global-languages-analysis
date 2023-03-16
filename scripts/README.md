@@ -1,4 +1,4 @@
-# Scripts folder README.txt file
+# Scripts folder README.md file
 
 This folder contains data management, processing, analysis, and visualization scripts in addition to supporting files used by those scripts. The names of the scripts that their high-level purpose are as follows:
 
