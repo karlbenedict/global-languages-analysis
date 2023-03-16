@@ -7,6 +7,7 @@ source("scripts/00_include.R")
 polygonsLayer <- "languages_voronoi_clipped"
 fixedTime <- now()
 outputDataFile <- paste(projectRoot,"/output/data/v-languages.csv", sep="")
+outputSourceLanguages <- paste(projectRoot,"/output/data/languages.csv", sep="")
 
 location <- "4326"
 mapset <- "PERMANENT"
@@ -30,6 +31,7 @@ execGRASS("v.rast.stats",
           flags=c("verbose","c","d"),
           parameters=list(map = polygonsLayer,
                           raster = rasterLayer,
+                          method = c("number", "null_cells", "minimum", "maximum", "range", "average", "stddev", "variance", "coeff_var", "first_quartile", "median", "third_quartile"),
                           column_prefix = "v_elev_m_"),
           echoCmd=TRUE)
 execGRASS("v.info",
@@ -47,6 +49,7 @@ execGRASS("v.rast.stats",
           flags=c("verbose","c","d"),
           parameters=list(map = polygonsLayer,
                           raster = rasterLayer,
+                          method = c("number", "null_cells", "minimum", "maximum", "range", "average", "stddev", "variance", "coeff_var", "first_quartile", "median", "third_quartile"),
                           column_prefix = "v_qa_unitless_"),
           echoCmd=TRUE)
 execGRASS("v.info",
@@ -65,6 +68,7 @@ execGRASS("v.rast.stats",
           flags=c("verbose","c","d"),
           parameters=list(map = polygonsLayer,
                           raster = rasterLayer,
+                          method = c("number", "null_cells", "minimum", "maximum", "range", "average", "stddev", "variance", "coeff_var", "first_quartile", "median", "third_quartile"),
                           column_prefix = "v_biomass_MgHa_"),
           echoCmd=TRUE)
 execGRASS("v.info",
@@ -151,5 +155,23 @@ execGRASS("v.info",
 
 
 ##### Export extracted data to CSV for further analysis #######################
+location <- "4326"
+mapset <- "PERMANENT"
+initGRASS(
+  gisBase = gisBase,
+  home = projectRoot,
+  gisDbase = gisDBase,
+  location = location,
+  mapset = mapset,
+  override = TRUE
+)
 outData <- distinct(as.data.frame(read_VECT(polygonsLayer)))
+outSourceLanguages <- distinct(as.data.frame(read_VECT("languages")))
 write.csv(outData, file=outputDataFile)
+write.csv(outSourceLanguages, file=outputSourceLanguages)
+
+library(sets)
+outputDataFile <- read_csv(paste(projectRoot,"/output/data/v-languages.csv", sep=""))
+outputSourceLanguages <- read_csv(paste(projectRoot,"/output/data/languages.csv", sep=""))
+cat("The languages that did not make it through the generation and extraction process are:", unlist(set_complement(as.set(outputDataFile[['code']]),as.set(outputSourceLanguages[['code']]))))
+

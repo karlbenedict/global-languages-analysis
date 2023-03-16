@@ -7,7 +7,7 @@ source("scripts/00_include.R")
 library(ggplot2)
 library(corrplot)
 
-languageDataFile <- paste(projectRoot,"/output/data/v-languages_2022-12-02T16:28.csv",sep="")
+languageDataFile <- paste(projectRoot,"/output/data/v-languages.csv",sep="")
 gsoyDataFile <- paste(projectRoot,"/output/data/gsoy.csv",sep="")
 outputDir <- paste(projectRoot,"/output/images",sep="")
 
@@ -198,4 +198,13 @@ corrplot(corrM,
          cl.cex=4,
          type="upper")
 dev.off()
+
+##### Language and associated weather station data ###########################
+stationFreq <- languageData %>% 
+  mutate(tavg_gt_20 = (v_tavg_dC__ct >= 20),
+         prcp_gt_20 = (v_prcp_mm__ct >= 20)) %>% 
+  select(code, tavg_gt_20, prcp_gt_20)
+
+tavt_gt_20_prop <- sum(stationFreq$tavg_gt_20)/nrow(stationFreq)
+prcp_gt_20_prop <- sum(stationFreq$prcp_gt_20)/nrow(stationFreq)
 

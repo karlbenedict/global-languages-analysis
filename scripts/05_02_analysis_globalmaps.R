@@ -16,7 +16,7 @@ initGRASS(
 )
 execGRASS("g.region",
           flags=c("verbose"),
-          parameters=list(res="00:05:00"),
+          parameters=list(raster="bmng.rgb"),
           echoCmd=TRUE
 )
 
@@ -187,6 +187,7 @@ ps_preview(title="Distribution of project languages environmental samples (SW Af
 
 
 ##### Ejectives ###############################################################
+# currently throwing error - no such column: xEjectives
 location <- "4326"
 mapset <- "PERMANENT"
 initGRASS(
@@ -199,7 +200,16 @@ initGRASS(
 )
 execGRASS("g.region",
           flags=c("verbose"),
-          parameters=list(res="00:05:00"),
+          parameters=list(raster="bmng.rgb"),
           echoCmd=TRUE
 )
+ps_preview(title="Number of Ejectives",
+           raster="bmng.rgb",
+           vPoints=c("languages","languages"),
+           vPoints_colors = c("white","red"),
+           vPoints_sizeColumn = c("","xEjectives"),
+           vPoints_where = c("xEjectives = 0", "xEjectives > 0"),
+           output=TRUE,
+           bbox="global",
+           prefix="nejectives")
 

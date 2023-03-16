@@ -8,7 +8,7 @@ fileURL <- "https://linguistics.sfo3.digitaloceanspaces.com/compressed_source_da
 gsoy_test_run <- FALSE
 sampleSize <- 100 # only applicable when doing a test run
 # define temporal subset to extract and process
-startYear <- 1950
+startYear <- 1951
 endYear <- 1980
 
 
@@ -255,6 +255,10 @@ read_gsoy_data <- function(filename, outfilename, newfile) {
     new_df
   )
   starting_rows <- nrow(working)
+  working_all <- working %>%
+    mutate(DATASET_NAME = filename) %>%
+    mutate(CAT = paste(STATION, DATE, LONGITUDE, LATITUDE, sep = "_")) %>%
+    filter(!is.na(as.numeric(LATITUDE)) & !is.na(as.numeric(LONGITUDE)))
   working <- working %>%
     mutate(DATASET_NAME = filename) %>%
     mutate(CAT = paste(STATION, DATE, LONGITUDE, LATITUDE, sep = "_")) %>%
@@ -264,11 +268,13 @@ read_gsoy_data <- function(filename, outfilename, newfile) {
   #print(working_rows)
   if(newfile){
     write_csv(working, outfilename, append = FALSE, na = "NA")
+    write_csv(working_all, str_replace(outfilename, ".csv", "_all.csv"), append = FALSE, na = "NA")
   }
   else {
     write_csv(working, outfilename, append = TRUE, na = "NA")
+    write_csv(working_all, str_replace(outfilename, ".csv", "_all.csv"), append = TRUE, na = "NA")
   }
-  remove(working_df, working)
+  remove(working_df, working, working_all)
   returnList <- c(working_rows,starting_rows)
   return(returnList)
 }
