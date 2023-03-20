@@ -187,7 +187,7 @@ ps_preview(title="Distribution of project languages environmental samples (SW Af
 
 
 ##### Ejectives ###############################################################
-# currently throwing error - no such column: xEjectives
+
 location <- "4326"
 mapset <- "PERMANENT"
 initGRASS(
@@ -207,8 +207,8 @@ ps_preview(title="Number of Ejectives",
            raster="bmng.rgb",
            vPoints=c("languages","languages"),
            vPoints_colors = c("white","red"),
-           vPoints_sizeColumn = c("","xEjectives"),
-           vPoints_where = c("xEjectives = 0", "xEjectives > 0"),
+           vPoints_sizeColumn = c("","N_Ejectives"),
+           vPoints_where = c("N_Ejectives = 0", "N_Ejectives > 0"),
            output=TRUE,
            bbox="global",
            prefix="nejectives")

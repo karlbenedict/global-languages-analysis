@@ -82,7 +82,7 @@ ps_preview <- function(raster="",
   sourceFolder <- tempDatedFolder()
   if (output){
     workingDir <- paste(projectRoot,"/output/images", sep="")
-    outputFile <- paste(workingDir,"/",prefix,"_",bbox,"_",substr(layerNames,1,25),".ps", sep="")
+    outputFile <- paste(workingDir,"/",prefix,"_",bbox,"_",layerNames,".ps", sep="")
   } else {
     workingDir <- sourceFolder
     outputFile <- paste(sourceFolder, "output.ps", sep="/")
@@ -124,7 +124,7 @@ ps_preview <- function(raster="",
           cat("    size .25" , fill=TRUE, file=commandFile, append=TRUE)
         }
       } else {
-        cat("    size .25" , fill=TRUE, file=commandFile, append=TRUE)
+        cat("    size 1" , fill=TRUE, file=commandFile, append=TRUE)
       }
       cat("end", fill=TRUE, file=commandFile, append=TRUE)
     }
