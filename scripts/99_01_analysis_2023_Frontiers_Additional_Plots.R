@@ -9,6 +9,7 @@ library(ggpubr)
 options(scipen = 999)
 
 languages <- read_csv("output/data/v-languages.csv")
+distances <- read_csv("output/data/distances.csv")
 
 plotFunction <- function(plot_data,  x, y, x_label, y_label, outfile_name_prefix) {
   plot_data <- plot_data %>% 
@@ -81,6 +82,96 @@ plotFunction(filter(languages, N_Ejectives > 0),
              "Specific Humidity (unitless)",
              "Number of Ejectives (>0)",
              "scatter_05_")
+
+# distance plots
+dist_plot_data <- distances %>% 
+  filter(!is.na(man_dist) & man_dist > 0) %>% 
+  mutate(man_dist_fact = as.factor(man_dist),
+         ConsHeavy_dist_log10 = log10(ConsHeavy_dist)) %>% 
+  mutate(category = ifelse(man_dist == 9,
+                           "Divided\nOpinions",
+                           ifelse(man_dist==1,
+                                  "Dialect",
+                                  "Scalar\nRelationship")))
+
+# return label text for the number of observations in a group
+# modified from https://stackoverflow.com/questions/28846348/add-number-of-observations-per-group-in-boxplot
+give.n <- function(x){
+  return(
+    data.frame(
+      y = -.75,
+      label = toString(length(x))
+    )
+  ) 
+}
+
+gen_dist_plot <- function(column, x_label, y_label) {
+  print(column)
+  x_max <- max(dist_plot_data[column],na.rm=TRUE)
+  print(x_max)
+  my_plot <- ggplot(dist_plot_data, 
+                    mapping=aes(x=man_dist_fact, 
+                                y=.data[[column]], 
+                                group=man_dist_fact, 
+                                fill=category)) +
+    geom_boxplot() +
+    scale_x_discrete(x_label, 
+                     breaks=c(1,2,3,4,5,6,7,8,9),
+                     labels=c("Dialect","Close","|","|","|","|","V","Distant","Divided\nOpinions")) +
+    scale_y_continuous(y_label) +
+    theme_classic() +
+    theme(legend.position="none",
+          legend.title=element_blank(),
+          axis.text.x=element_text(angle=90,size=6,vjust=.5)) +
+    scale_fill_brewer(palette="Dark2") +
+    scale_color_brewer(palette="Dark2") +
+    stat_summary(fun.data = give.n, 
+                 geom = "text",
+                 position = position_dodge(width = 0.75),
+                 size=2) +
+    annotate('text', 
+             x = .75, y = -.75, 
+             label = 'n=',
+             size=2)
+  
+  outfile <- paste("distances_",column,".tiff", sep="")
+  ggsave(outfile,
+         plot=my_plot,
+         path="output/images/",
+         width=85,
+         height=85,
+         units="mm",
+         dpi=300)
+  
+  
+}
+
+columns <- list(
+  list(var="Vowindex_dist", label="Vowel Index Dist."),
+  list(var="OnsCoda_dist", label="OnsCoda Dist."),
+  list(var="ObsPct_dist", label="ObsPct Dist."),
+  list(var="ConsHeavy_dist", label="Consonant Heavyness Dist."),
+  list(var="ConsHeavy_dist_log10", label="Log10 Consonant Heavyness Dist."),
+  list(var="v_elev_m__median_dist", label="Elevation (m) Dist."),
+  list(var="v_qa_unitless__median_dist", label="Specific Humidity (unitless) Dist."),
+  list(var="v_biomass_MgHa__median_dist", label="Biomass (MegaG/Ha) Dist."),
+  list(var="v_tmax_dC__avg_dist", label="Max. Temperature (C) Dist."),
+  list(var="v_tmin_dC__avg_dist", label="Min. Temperature (C) Dist."),
+  list(var="v_tavg_dC__avg_dist", label="Avg. Temperature (C) Dist."),
+  list(var="v_prcp_mm__avg_dist", label="Precipitation (mm) Dist.")
+)
+
+for (column in columns) {
+  #print(column$var)
+  gen_dist_plot(column$var, "Assigned Language Distance", column$label)
+}
+
+plotFunction(dist_plot_data, 
+             "ConsHeavy_dist", 
+             "v_tmax_dC__avg_dist",
+             "ConsHeavy_dist",
+             "v_tmax_dC__avg_dist",
+             "distances_scatter_01")
 
 
 

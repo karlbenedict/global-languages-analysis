@@ -23,7 +23,7 @@ Sys.setenv(LC_ALL = "en_US.UTF-8",
 
 
 # define the local path to the project root folder ####################################################################
-setwd(paste(Sys.getenv("HOME"), "global-languages-analysis", sep="/"))
+#setwd(paste(Sys.getenv("HOME"), "global-languages-analysis", sep="/"))
 projectRoot <- paste(Sys.getenv("HOME"), "global-languages-analysis", sep="/")
 gisBase <- "/usr/lib/grass82"
 gisDBase <- paste(Sys.getenv("HOME"), "global-languages-analysis", "grassdata", sep="/")
