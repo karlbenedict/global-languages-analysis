@@ -1,5 +1,5 @@
 {
-	"version": "1.1_FP2023",
+	"version": "1.1.1_FP2023",
 	"title": "Analytic platform and code for global linguistic analysis",
 	"description": "This repository contains the Dockerfile and setup scripts for recreating the analytic environment (including GRASS GIS and the web-based RStudio platform), analytic code for building the source data used in the analysis of the associations between global environmental variables and linguistic characteristics, and analytic and visualization code for producing the various research outputs of the project. ",
 	"keywords": [
