@@ -14,22 +14,21 @@ library(tools)
 # legacy - delete if not needed later
 #use_sp() # https://gis.stackexchange.com/questions/341451/rgrass7-no-stars-import-yet
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ##########################################
-# this should find the current version of GRASS GIs that was installed during
-# the system build. The following commented out line can be used to manually
-# specify the GRASS version if it can't be automatically identified. 
-gisBase <- Sys.glob("/usr/lib/grass*")
-# gisBase <- "/usr/lib/grass83"
-
 
 
 # setup environment variables
-rm(list = ls())
+rm(list = ls()) # this needs to be executed before new objects are created as it removes any existing ones - housecleaning
 Sys.setenv(LC_ALL = "en_US.UTF-8",
            LANG = "en_US.UTF-8",
            CPL_ZIP_ENCODING = "UTF-8")
 
-
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ##########################################
+           # this should find the current version of GRASS GIs that was installed during
+           # the system build. The following commented out line can be used to manually
+           # specify the GRASS version if it can't be automatically identified. 
+           gisBase <- Sys.glob("/usr/lib/grass*")
+           # gisBase <- "/usr/lib/grass83"
+           
 
 # define the local path to the project root folder ####################################################################
 #setwd(paste(Sys.getenv("HOME"), "global-languages-analysis", sep="/"))

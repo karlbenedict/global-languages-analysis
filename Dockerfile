@@ -23,7 +23,8 @@ RUN mkdir /home/rstudio/data/temp
 #RUN mkdir /home/rstudio/data/data_processed
 #COPY scripts /home/rstudio/data/scripts
 RUN chown -R rstudio /home/rstudio/temp
-RUN cp -r /home/rstudio/temp/* /home/rstudio
+RUN cp -r /home/rstudio/temp/. /home/rstudio
+RUN chown -R rstudio /home/rstudio/temp
 
 VOLUME /home/rstudio
 

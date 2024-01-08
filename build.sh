@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-docker build -t rocker-grass .	
+docker build --no-cache -t rocker-grass .	
 
