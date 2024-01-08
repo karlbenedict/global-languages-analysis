@@ -33,9 +33,9 @@ Sys.setenv(LC_ALL = "en_US.UTF-8",
 
 # define the local path to the project root folder ####################################################################
 #setwd(paste(Sys.getenv("HOME"), "global-languages-analysis", sep="/"))
-projectRoot <- paste(Sys.getenv("HOME"), "global-languages-analysis", sep="/")
-setwd(projectRoot)  # make sure the R working directory is set properly to the root of the project
-gisDBase <- paste(Sys.getenv("HOME"), "global-languages-analysis", "grassdata", sep="/")
+projectRoot <- paste(Sys.getenv("HOME"), "", sep="/")
+#setwd(projectRoot)  # make sure the R working directory is set properly to the root of the project
+gisDBase <- paste(Sys.getenv("HOME"), "data", "grassdata", sep="/")
 
 varNames <- c("GISBASE",
               "GISDBASE",
@@ -51,7 +51,7 @@ varNames <- c("GISBASE",
 
 tempDatedFolder <- function() {
   fixedTime <- now()
-  tempdir <- paste(projectRoot,"/", "temp/", sep = "")
+  tempdir <- paste(projectRoot,"/data/temp/", sep = "")
   temppath <- paste(tempdir, "working_", paste(date(fixedTime), "T", hour(fixedTime), ":", minute(fixedTime), ":", second(fixedTime), "_", stri_rand_strings(1, 5), sep = ""), sep = "")
   dir.create(temppath)
   temppath

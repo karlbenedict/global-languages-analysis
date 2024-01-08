@@ -14,17 +14,18 @@ RUN install2.r --error --skipmissing --skipinstalled \
 	corrplot \
 	R.utils
 
-RUN git clone https://github.com/karlbenedict/global-languages-analysis.git /home/rstudio/global-languages-analysis
-#RUN mkdir -p /home/rstudio/global-languages-analysis/data/scripts
-RUN mkdir -p /home/rstudio/global-languages-analysis/data/output/data
-RUN mkdir /home/rstudio/global-languages-analysis/data/output/images
-RUN mkdir /home/rstudio/global-languages-analysis/data/grassdata
-RUN mkdir /home/rstudio/global-languages-analysis/data/temp
-#RUN mkdir /home/rstudio/global-languages-analysis/data/data_processed
+RUN git clone https://github.com/karlbenedict/global-languages-analysis.git /home/rstudio/temp
+#RUN mkdir -p /home/rstudio/data/scripts
+RUN mkdir -p /home/rstudio/data/output/data
+RUN mkdir /home/rstudio/data/output/images
+RUN mkdir /home/rstudio/data/grassdata
+RUN mkdir /home/rstudio/data/temp
+#RUN mkdir /home/rstudio/data/data_processed
 #COPY scripts /home/rstudio/data/scripts
-RUN chown -R rstudio /home/rstudio/global-languages-analysis
+RUN chown -R rstudio /home/rstudio/temp
+RUN cp -r /home/rstudio/temp/* /home/rstudio
 
-VOLUME /home/rstudio/global-languages-analysis
+VOLUME /home/rstudio
 
 
 
