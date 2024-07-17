@@ -1,7 +1,16 @@
-grass_data/
+grassdata/
 source_data/
 output/
 temp/
+<<<<<<< HEAD
 *.pdf
 *.out
 .DS_STORE
+=======
+.DS_STORE
+xx*
+.grassrc*
+*.png
+nohup.out
+*.Rout
+>>>>>>> 84f5e1609e2b13ae9c77d6174de992376434dd66
