@@ -2,7 +2,8 @@ FROM rocker/geospatial:4.2.2-ubuntugis
 
 RUN apt-get update && apt-get upgrade -y && \
 apt-get install -y --no-install-recommends --no-install-suggests \
-	grass
+	grass \
+	screen
 	
 ## install additional needed R modules
 RUN install2.r --error --skipmissing --skipinstalled \
